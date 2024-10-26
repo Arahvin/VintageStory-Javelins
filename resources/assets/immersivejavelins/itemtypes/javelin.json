@@ -77,5 +77,10 @@
 		"rotation": { "x": 0, "y": 0, "z": 0 },
 		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
 		"scale": 3.4
+	},
+	tpOffHandTransform: {
+		translation: { x: -0.51, y: -0.54, z: -0.55 },
+		rotation: { x: 90, y: 1, z: 0 },
+		scale: 1
 	}
 }
