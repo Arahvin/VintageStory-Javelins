@@ -59,6 +59,8 @@ namespace ImmersiveJavelins
 
 		public static bool GetHeldItemInfo_Prefix(ItemSlot inSlot, StringBuilder dsc, IWorldAccessor world, bool withDebugInfo)
         {
+			if (inSlot.Itemstack.Collectible.Code.Domain != "immersivejavelins") return true;
+
             if (inSlot.Itemstack.Collectible.Attributes == null) return false;
 
             float damage = 1.5f;
@@ -78,13 +80,17 @@ namespace ImmersiveJavelins
 
 		public static bool OnHeldAttackStart_Prefix(ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel, ref EnumHandHandling handling)
 		{
+			if (slot.Itemstack.Collectible.Code.Domain != "immersivejavelins") return true;
 			handling = EnumHandHandling.PreventDefault;
 			return false;
 		}
 
         public static bool OnHeldInteractStop_Prefix(float secondsUsed, ItemSlot slot, EntityAgent byEntity, BlockSelection blockSel, EntitySelection entitySel) 
 		{
+			if (slot.Itemstack.Collectible.Code.Domain != "immersivejavelins") return true;
 			if (byEntity.Attributes.GetInt("aimingCancel") == 1) return false;
+
+			CollectibleObject co = slot.Itemstack.Collectible;
 
 			byEntity.Attributes.SetInt("aiming", 0);
 			byEntity.StopAnimation("aim");
@@ -119,8 +125,18 @@ namespace ImmersiveJavelins
 			double rndyaw = byEntity.WatchedAttributes.GetDouble("aimingRandYaw", 1) * acc * 0.75;
 			Vec3d pos = byEntity.ServerPos.XYZ.Add(0, byEntity.LocalEyePos.Y - 0.2, 0);
 			Vec3d aheadPos = pos.AheadCopy(1, byEntity.ServerPos.Pitch + rndpitch, byEntity.ServerPos.Yaw + rndyaw);
-			Vec3d velocity = (aheadPos - pos) * 0.65;
-			Vec3d spawnPos = byEntity.ServerPos.BehindCopy(0.21).XYZ.Add(byEntity.LocalEyePos.X, byEntity.LocalEyePos.Y - 0.2, byEntity.LocalEyePos.Z);
+			Vec3d velocity = (aheadPos - pos) * 0.8;
+
+			// Add a slight forward offset to bring the javelin tip closer to impact point
+			double offsetDistance = -0.2;  // Adjust this distance for more or less offset
+			double length = velocity.Length();
+
+			Vec3d forwardOffset = new Vec3d(
+				(velocity.X / length) * offsetDistance,
+				(velocity.Y / length) * offsetDistance,
+				(velocity.Z / length) * offsetDistance
+			);
+			Vec3d spawnPos = byEntity.ServerPos.BehindCopy(0.21).XYZ.Add(byEntity.LocalEyePos.X, byEntity.LocalEyePos.Y - 0.2, byEntity.LocalEyePos.Z).Add(forwardOffset);
 			enpr.ServerPos.SetPosWithDimension(spawnPos);
 			enpr.ServerPos.Motion.Set(velocity);
 
@@ -130,6 +146,11 @@ namespace ImmersiveJavelins
 
 			byEntity.World.SpawnEntity(enpr);
 			byEntity.StartAnimation("throw");
+
+			if (byEntity is EntityPlayer) co.RefillSlotIfEmpty(slot, byEntity, (itemstack) => itemstack.Collectible is ItemSpear);
+
+            var pitch = (byEntity as EntityPlayer).talkUtil.pitchModifier;
+            byPlayer.Entity.World.PlaySoundAt(new AssetLocation("sounds/player/strike"), byPlayer.Entity, byPlayer, pitch * 0.9f + (float)ImmersiveJavelinsMod.api.World.Rand.NextDouble() * 0.2f, 16, 0.35f);
 
 			return false;
 		}
