@@ -100,8 +100,6 @@ namespace ImmersiveJavelins
 			float damage = slot.Itemstack.Collectible.Attributes?["damage"].AsFloat(1.5f) ?? 1.5f;
 			(ImmersiveJavelinsMod.api as ICoreClientAPI)?.World.AddCameraShake(0.17f);
 
-			// Take out one item from the stack only once here
-
 			IPlayer byPlayer = null;
 			if (byEntity is EntityPlayer) byPlayer = byEntity.World.PlayerByUid(((EntityPlayer)byEntity).PlayerUID);
 
@@ -127,7 +125,7 @@ namespace ImmersiveJavelins
 			Vec3d aheadPos = pos.AheadCopy(1, byEntity.ServerPos.Pitch + rndpitch, byEntity.ServerPos.Yaw + rndyaw);
 			Vec3d velocity = (aheadPos - pos) * 0.8;
 			Vec3d spawnPos = byEntity.ServerPos.BehindCopy(0.21).XYZ.Add(byEntity.LocalEyePos.X, byEntity.LocalEyePos.Y - 0.2, byEntity.LocalEyePos.Z);
-			enpr.ServerPos.SetPosWithDimension(spawnPos);
+			enpr.ServerPos.SetPos(spawnPos);
 			enpr.ServerPos.Motion.Set(velocity);
 
 			enpr.Pos.SetFrom(enpr.ServerPos);
