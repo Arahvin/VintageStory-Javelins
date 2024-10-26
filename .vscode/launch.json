@@ -1,0 +1,18 @@
+{
+	"version": "0.2.0",
+	"configurations": [{
+		"name": "Launch Client (.NET)",
+		"type": "coreclr",
+		"request": "launch",
+		"preLaunchTask": "Build (Debug)",
+		"program": "C:/Users/diogo/AppData/Roaming/Vintagestory/Vintagestory.exe",
+		"args": [
+			"--playStyle" , "preset-surviveandbuild",
+			"--openWorld" , "modding test world",
+			"--addModPath", "${workspaceFolder}/bin/Debug/net7.0",
+			"--addOrigin" , "${workspaceFolder}/resources/assets",
+		],
+		"console": "internalConsole",
+		"internalConsoleOptions": "openOnSessionStart",
+	}]
+}

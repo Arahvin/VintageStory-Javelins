@@ -1,0 +1,12 @@
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\Javelins.csproj.AssemblyReference.cache
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\Javelins.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\Javelins.AssemblyInfoInputs.cache
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\Javelins.AssemblyInfo.cs
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\Javelins.csproj.CoreCompileInputs.cache
+C:\Users\diogo\Documents\VS Mods\Javelins\bin\Debug\net7.0\Javelins.deps.json
+C:\Users\diogo\Documents\VS Mods\Javelins\bin\Debug\net7.0\Javelins.dll
+C:\Users\diogo\Documents\VS Mods\Javelins\bin\Debug\net7.0\Javelins.pdb
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\Javelins.dll
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\refint\Javelins.dll
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\Javelins.pdb
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\ref\Javelins.dll

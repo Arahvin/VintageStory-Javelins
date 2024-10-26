@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<Reference Include="0Harmony">
+			<HintPath>C:\Users\diogo\AppData\Roaming\Vintagestory\Lib\0Harmony.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="VintagestoryAPI">
+			<HintPath>C:\Users\diogo\AppData\Roaming\Vintagestory\VintagestoryAPI.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="VintagestoryAPI">
+			<HintPath>C:\Users\diogo\AppData\Roaming\Vintagestory\Mods\VSEssentials.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="VintagestoryAPI">
+			<HintPath>C:\Users\diogo\AppData\Roaming\Vintagestory\Mods\VSSurvivalMod.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+	
+	<ItemGroup Condition="'$(Configuration)' == 'Release'">
+		<None Include="UNLICENSE" CopyToOutputDirectory="PreserveNewest" />
+		<None Include="resources/**">
+			<Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+	
+	<Target Name="Package" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
+		<ZipDirectory DestinationFile="bin/$(TargetName).zip" SourceDirectory="$(TargetDir)" Overwrite="true" />
+	</Target>
+</Project>

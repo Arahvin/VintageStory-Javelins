@@ -1,0 +1,81 @@
+{
+	"code": "javelin",
+	"class": "ItemSpear",
+	"tool": "spear",
+	"attributes": {
+		"handbook": { "groupBy": ["javelin-*"] },
+		"groundStorageTransformByType": {
+			"*": {
+				"translation": { "x": 0, "y": 0.29, "z": 0.34 },
+				"rotation": { "x": 16, "y": 90, "z": 90 },
+				"scale": 0.85
+			}
+		},
+		"spearEntityCode": "immersivejavelins:javelin-{material}",
+		"__comment": "Thrown damage",
+		"damageByType": {
+			"javelin-bone": 4
+		},
+		"breakChanceOnImpactByType": {
+			"javelin-bone": 0.3
+		}
+	},
+	"behaviors": [
+		{ 
+			"name": "GroundStorable",
+			"properties": {
+				"layout": "WallHalves",
+				"wallOffY": 2,
+				"sprintKey": true,
+				"selectionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 1, "y2": 0.1, "z2": 1 },
+				"collisionBox": { "x1": 0, "y1": 0, "z1": 0, "x2": 0, "y2": 0, "z2": 0 }
+			}
+		},
+		{ "name": "AnimationAuthoritative" }
+	],
+	"maxstacksize": 5,
+	"variantgroups": [
+		{ "code": "material", "states": ["bone"] }
+	],
+	"shapeByType": {
+		"*": { "base": "game:item/tool/spear/stone" }
+	},
+	"texturesByType": {
+		"javelin-bone": { 
+			"material": { "base": "game:block/creature/bone" } 
+		}
+	},
+	"heldTpHitAnimation": "idle",
+	"heldTpUseAnimation": "interactstatic",
+	"tooltierbytype": {
+		"*-bone": 1
+	},
+	"damageTypeByType": {
+		"*": "PiercingAttack"
+	},
+	"creativeinventory": { "general": ["*"], "items": ["*"], "tools": ["*"], "alphaweaponpack": ["*"] },
+	guiTransform: {
+		translation: { x: 0, y: 0, z: 0 },
+		rotation: { x: -50, y: 44, z: -10 },
+		origin: { x: 1.1, y: 0.5, z: 0.27 },
+		scale: 2.25
+	},
+	fpHandTransform: {
+		translation: { x: 0, y: 0, z: 0 },
+		rotation: { x: -85, y: 70, z: 90 },
+		origin: { x: 0.5, y: 0, z: 0.3 },
+		scale: 3.5
+	},
+	tpHandTransform: {
+		translation: { x: -1.55, y: -0.01, z: -0.5899 },
+		rotation: { x: 15, y: 0, z: 0 },
+		origin: { x: 0.6, y: 0, z: 0.5 },
+		scale: 0.8
+	},
+	groundTransform: {
+		translation: { x: 0, y: 0, z: 0 },
+		rotation: { x: 0, y: 0, z: 0 },
+		origin: { x: 0.5, y: 0, z: 0.5 },
+		scale: 3.4
+	}
+}

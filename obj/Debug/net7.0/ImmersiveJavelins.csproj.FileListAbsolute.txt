@@ -1,0 +1,12 @@
+C:\Users\diogo\Documents\VS Mods\Javelins\bin\Debug\net7.0\ImmersiveJavelins.deps.json
+C:\Users\diogo\Documents\VS Mods\Javelins\bin\Debug\net7.0\ImmersiveJavelins.dll
+C:\Users\diogo\Documents\VS Mods\Javelins\bin\Debug\net7.0\ImmersiveJavelins.pdb
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\ImmersiveJavelins.csproj.AssemblyReference.cache
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\ImmersiveJavelins.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\ImmersiveJavelins.AssemblyInfoInputs.cache
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\ImmersiveJavelins.AssemblyInfo.cs
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\ImmersiveJavelins.csproj.CoreCompileInputs.cache
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\ImmersiveJavelins.dll
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\refint\ImmersiveJavelins.dll
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\ImmersiveJavelins.pdb
+C:\Users\diogo\Documents\VS Mods\Javelins\obj\Debug\net7.0\ref\ImmersiveJavelins.dll
