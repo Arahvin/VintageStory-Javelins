@@ -126,17 +126,7 @@ namespace ImmersiveJavelins
 			Vec3d pos = byEntity.ServerPos.XYZ.Add(0, byEntity.LocalEyePos.Y - 0.2, 0);
 			Vec3d aheadPos = pos.AheadCopy(1, byEntity.ServerPos.Pitch + rndpitch, byEntity.ServerPos.Yaw + rndyaw);
 			Vec3d velocity = (aheadPos - pos) * 0.8;
-
-			// Add a slight forward offset to bring the javelin tip closer to impact point
-			double offsetDistance = -0.2;  // Adjust this distance for more or less offset
-			double length = velocity.Length();
-
-			Vec3d forwardOffset = new Vec3d(
-				(velocity.X / length) * offsetDistance,
-				(velocity.Y / length) * offsetDistance,
-				(velocity.Z / length) * offsetDistance
-			);
-			Vec3d spawnPos = byEntity.ServerPos.BehindCopy(0.21).XYZ.Add(byEntity.LocalEyePos.X, byEntity.LocalEyePos.Y - 0.2, byEntity.LocalEyePos.Z).Add(forwardOffset);
+			Vec3d spawnPos = byEntity.ServerPos.BehindCopy(0.21).XYZ.Add(byEntity.LocalEyePos.X, byEntity.LocalEyePos.Y - 0.2, byEntity.LocalEyePos.Z);
 			enpr.ServerPos.SetPosWithDimension(spawnPos);
 			enpr.ServerPos.Motion.Set(velocity);
 
