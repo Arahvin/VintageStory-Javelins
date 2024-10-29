@@ -9,7 +9,8 @@
   "version": "1.0.1",
   "assets": {
     "entities": [
-      "javelins.json"
+      "javelin.json",
+      "crudejavelin.json"
     ]
   }
 }

@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using System.Text;
 using Vintagestory.API.Client;
 using Vintagestory.API.Common;
@@ -7,6 +8,7 @@ using Vintagestory.API.Server;
 using Vintagestory.API.Config;
 using Vintagestory.API.Util;
 using Vintagestory.API.MathTools;
+using System.Collections.Generic;
 
 using Vintagestory.GameContent;
 
@@ -20,10 +22,350 @@ namespace ImmersiveJavelins
 	public class ImmersiveJavelinsMod : ModSystem
 	{
 		// Store the ICoreAPI reference
-		public static ICoreAPI api;
+		public static ICoreAPI capi;
+		public static ICoreServerAPI sapi;
+		private MeshRef _circleMesh;
+		private readonly Dictionary<string, float> craftingStartTimes = new Dictionary<string, float>();
+
+		private readonly int boneJavelinCraftTime = 1500;
+
+
+		public override void StartServerSide(ICoreServerAPI api)
+		{
+			sapi = api;
+			sapi.Event.RegisterGameTickListener(new Action<float>(this.OnGameTick), 50, 0);
+		}
+
+
+		// Crafting immersivejavelins:javelinhead-bone Section
+
+		private void OnGameTick(float dt)
+		{
+			bool flag = sapi == null;
+			if (sapi != null && sapi.Server.CurrentRunPhase == EnumServerRunPhase.RunGame)
+			{
+				IPlayer[] allPlayers = sapi.World.AllOnlinePlayers;
+				
+				for (int i = 0; i < allPlayers.Length; i++)
+				{
+					IPlayer player = allPlayers[i];
+					IServerPlayer serverPlayer = player as IServerPlayer;
+
+					if (serverPlayer != null && serverPlayer.ConnectionState == EnumClientState.Playing)
+					{
+						ItemSlot itemSlot = null;
+						ItemSlot leftHandItemSlot = null;
+						if (serverPlayer != null)
+						{
+							IPlayerInventoryManager inventoryManager = serverPlayer.InventoryManager;
+							itemSlot = ((inventoryManager != null) ? inventoryManager.ActiveHotbarSlot : null);
+							leftHandItemSlot = serverPlayer.Entity != null && serverPlayer.Entity.LeftHandItemSlot != null ? serverPlayer.Entity.LeftHandItemSlot : null;
+						}
+
+						string playerUID = (serverPlayer != null) ? serverPlayer.PlayerUID : null;
+
+						if (playerUID != null)
+						{
+							string itemClass;
+							string itemCodePath;
+							if (itemSlot == null)
+							{
+								itemClass = null;
+								itemCodePath = null;
+							}
+							else
+							{
+								ItemStack itemstack = itemSlot.Itemstack;
+								if (itemstack == null)
+								{
+									itemClass = null;
+									itemCodePath = null;
+								}
+								else
+								{
+									CollectibleObject collectible = itemstack.Collectible;
+									if (collectible == null)
+									{
+										itemClass = null;
+										itemCodePath = null;
+									}
+									else
+									{
+										itemClass = collectible?.Class;
+										itemCodePath = itemstack?.Item?.Code?.Path;
+									}
+								}
+							}
+
+							bool rightMouseDown = serverPlayer.Entity.Controls.RightMouseDown;
+							if (rightMouseDown) {
+								if(itemClass == "ItemKnife") {
+									if(leftHandItemSlot?.Itemstack?.Collectible.Code.Path == "bone") {
+										bool playerCrafting = this.craftingStartTimes.ContainsKey(playerUID);
+										if (!playerCrafting) {
+											// Get him crafting
+											player.Entity.StartAnimation("knifecut");
+											sapi.World.PlaySoundAt(new AssetLocation("game:sounds/player/scrape"), serverPlayer.Entity.Pos.X, serverPlayer.Entity.Pos.Y, serverPlayer.Entity.Pos.Z, null, true, 32f, 1f);
+											this.craftingStartTimes[playerUID] = (float)sapi.World.ElapsedMilliseconds;
+										} else {
+											float heldDuration = (float)sapi.World.ElapsedMilliseconds - this.craftingStartTimes[playerUID];
+											if (heldDuration >= (float)this.boneJavelinCraftTime)
+											{
+												this.UpdateCirceMesh(0.5f);
+												this.CraftJavelinHeads(serverPlayer, leftHandItemSlot);
+												itemSlot?.Itemstack?.Collectible.DamageItem(sapi.World, serverPlayer.Entity, itemSlot, 1);
+												serverPlayer.Entity.StopAnimation("knifecut");
+												this.craftingStartTimes.Remove(playerUID);
+											}
+										}
+									} else if(leftHandItemSlot?.Itemstack?.Collectible.Code.Path == "feather") {
+										bool playerCrafting = this.craftingStartTimes.ContainsKey(playerUID);
+										if (!playerCrafting) {
+											// Get him crafting
+											player.Entity.StartAnimation("knifecut");
+											sapi.World.PlaySoundAt(new AssetLocation("game:sounds/player/scrape"), serverPlayer.Entity.Pos.X, serverPlayer.Entity.Pos.Y, serverPlayer.Entity.Pos.Z, null, true, 32f, 1f);
+											this.craftingStartTimes[playerUID] = (float)sapi.World.ElapsedMilliseconds;
+										} else {
+											float heldDuration = (float)sapi.World.ElapsedMilliseconds - this.craftingStartTimes[playerUID];
+											if (heldDuration >= (float)this.boneJavelinCraftTime)
+											{
+												this.CraftJavelinFletchings(serverPlayer, leftHandItemSlot);
+												itemSlot?.Itemstack?.Collectible.DamageItem(sapi.World, serverPlayer.Entity, itemSlot, 1);
+												serverPlayer.Entity.StopAnimation("knifecut");
+												this.craftingStartTimes.Remove(playerUID);
+											}
+										}
+									} else {
+										this.craftingStartTimes.Remove(playerUID);
+									}
+								} else {
+									if(itemCodePath == "javelinhead-bone") {
+										bool playerCrafting = this.craftingStartTimes.ContainsKey(playerUID);
+										ItemSlot stickSlot = this.FindItemInHotbar(serverPlayer, "stick");
+										if (!playerCrafting) {
+											// Get him crafting
+											if(stickSlot == null) return;
+											sapi.World.PlaySoundAt(new AssetLocation("game:sounds/player/scrape"), serverPlayer.Entity.Pos.X, serverPlayer.Entity.Pos.Y, serverPlayer.Entity.Pos.Z, null, true, 32f, 1f);
+											this.craftingStartTimes[playerUID] = (float)sapi.World.ElapsedMilliseconds;
+										} else {
+											float heldDuration = (float)sapi.World.ElapsedMilliseconds - this.craftingStartTimes[playerUID];
+											if (heldDuration >= (float)this.boneJavelinCraftTime)
+											{
+												this.CraftJavelin(serverPlayer, itemSlot, stickSlot, null, null);
+												this.craftingStartTimes.Remove(playerUID);
+											}
+										}
+									} else if(itemCodePath == "javelinfletching") {
+										bool playerCrafting = this.craftingStartTimes.ContainsKey(playerUID);
+										ItemSlot stickSlot = this.FindItemInHotbar(serverPlayer, "stick");
+										ItemSlot javelinheadSlot = this.FindItemInHotbar(serverPlayer, "javelinhead-bone");
+										ItemSlot crudeJavelinSlot = this.FindItemInHotbar(serverPlayer, "crudejavelin-bone");
+										if (!playerCrafting) {
+											// Get him crafting
+											if((stickSlot == null || javelinheadSlot == null) && crudeJavelinSlot == null) return;
+											sapi.World.PlaySoundAt(new AssetLocation("game:sounds/player/scrape"), serverPlayer.Entity.Pos.X, serverPlayer.Entity.Pos.Y, serverPlayer.Entity.Pos.Z, null, true, 32f, 1f);
+											this.craftingStartTimes[playerUID] = (float)sapi.World.ElapsedMilliseconds;
+										} else {
+											float heldDuration = (float)sapi.World.ElapsedMilliseconds - this.craftingStartTimes[playerUID];
+											if (heldDuration >= (float)this.boneJavelinCraftTime)
+											{
+												this.CraftJavelin(serverPlayer, javelinheadSlot, stickSlot, itemSlot, crudeJavelinSlot);
+												this.craftingStartTimes.Remove(playerUID);
+											}
+										}
+									} else {
+										this.craftingStartTimes.Remove(playerUID);
+									}
+								}
+							} else {
+								this.craftingStartTimes.Remove(playerUID);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		private ItemSlot FindItemInHotbar(IServerPlayer player, string wantedPath)
+		{
+			IInventory inventory;
+			if (player == null)
+			{
+				return null;
+			}
+
+			IPlayerInventoryManager inventoryManager = player.InventoryManager;
+			inventory = ((inventoryManager != null) ? inventoryManager.GetHotbarInventory() : null);
+			if (inventory == null)
+			{
+				return null;
+			}
+
+			for (int i = 0; i < inventory.Count; i++)
+			{
+				ItemSlot itemSlot = inventory[i];
+
+				if (itemSlot == null)
+				{
+					continue;
+				}
+				ItemStack itemstack = itemSlot.Itemstack;
+				if (itemstack == null)
+				{
+					continue;
+				}
+
+				CollectibleObject collectible = itemstack.Collectible;
+				if (collectible == null)
+				{
+					continue;
+				}
+
+				AssetLocation code = collectible.Code;
+				if (code == null)
+				{
+					continue;
+				}
+
+				string path = code.Path;
+				if(path != null && path == wantedPath) {
+					return itemSlot;
+				}
+			}
+			return null;
+		}
+		private void CraftJavelinHeads(IServerPlayer player, ItemSlot leftHandItemSlot) {
+			if(leftHandItemSlot != null && leftHandItemSlot.Itemstack != null && sapi != null) {
+				leftHandItemSlot.TakeOut(1);
+
+				Item javelinHead = sapi.World.GetItem(new AssetLocation("immersivejavelins:javelinhead-bone"));
+				ItemStack javelinHeadStack = new ItemStack(javelinHead, 2);
+				bool itemGiven = player.InventoryManager.TryGiveItemstack(javelinHeadStack, false);
+				if(itemGiven) {
+					leftHandItemSlot.MarkDirty();
+				} else {
+					sapi.World.Logger.Event("Something went wrong while crafting javelinheads.");
+				}
+			}
+		}
+
+		private void CraftJavelinFletchings(IServerPlayer player, ItemSlot leftHandItemSlot) {
+			if(leftHandItemSlot != null && leftHandItemSlot.Itemstack != null && sapi != null) {
+				leftHandItemSlot.TakeOut(1);
+
+				Item javelingFletchings = sapi.World.GetItem(new AssetLocation("immersivejavelins:javelinfletching"));
+				ItemStack javelingFletchingsStack = new ItemStack(javelingFletchings, 1);
+				bool itemGiven = player.InventoryManager.TryGiveItemstack(javelingFletchingsStack, false);
+				if(itemGiven) {
+					leftHandItemSlot.MarkDirty();
+				} else {
+					sapi.World.Logger.Event("Something went wrong while crafting javelingfletchings.");
+				}
+			}
+		}
+
+		private void CraftJavelin(IServerPlayer player, ItemSlot javelinHeadSlot, ItemSlot stickSlot, ItemSlot fletchingSlot, ItemSlot crudeJavelinSlot)
+		{
+			// Check if the player has the necessary items in the slots
+			bool hasJavelinHead = javelinHeadSlot?.Itemstack != null;
+			bool hasStick = stickSlot?.Itemstack != null;
+			bool hasFletching = fletchingSlot?.Itemstack != null;
+			bool hasCrudeJavelin = crudeJavelinSlot?.Itemstack != null;
+
+			// Determine the type of javelin to create
+			if (hasFletching && (hasCrudeJavelin || (hasStick && hasJavelinHead)))
+			{
+				// Create bone javelin
+				Item boneJavelin = sapi.World.GetItem(new AssetLocation("immersivejavelins:javelin-bone"));
+				ItemStack boneJavelinStack = new ItemStack(boneJavelin, 1);
+
+				// Attempt to give the bone javelin to the player
+				if (player.InventoryManager.TryGiveItemstack(boneJavelinStack, false))
+				{
+					if (hasCrudeJavelin)
+					{
+						crudeJavelinSlot.TakeOut(1);
+						crudeJavelinSlot.MarkDirty();
+					}
+					else
+					{
+						javelinHeadSlot.TakeOut(1);
+						stickSlot.TakeOut(1);
+						javelinHeadSlot.MarkDirty();
+						stickSlot.MarkDirty();
+					}
+					fletchingSlot.TakeOut(1);
+					fletchingSlot.MarkDirty();
+				}
+				else
+				{
+					sapi.World.Logger.Event("Something went wrong while crafting bone javelin.");
+				}
+			}
+			else if (hasJavelinHead && hasStick && !hasFletching)
+			{
+				// Create crude javelin
+				Item crudeJavelin = sapi.World.GetItem(new AssetLocation("immersivejavelins:crudejavelin-bone"));
+				ItemStack crudeJavelinStack = new ItemStack(crudeJavelin, 1);
+
+				// Attempt to give the crude javelin to the player
+				if (player.InventoryManager.TryGiveItemstack(crudeJavelinStack, false))
+				{
+					javelinHeadSlot.TakeOut(1);
+					stickSlot.TakeOut(1);
+					javelinHeadSlot.MarkDirty();
+					stickSlot.MarkDirty();
+				}
+				else
+				{
+					sapi.World.Logger.Event("Something went wrong while crafting crude javelin.");
+				}
+			}
+			else
+			{
+				sapi.World.Logger.Event("Player lacks required items to craft javelin.");
+			}
+		}
+
+		private void UpdateCirceMesh(float progress)
+		{
+			int num = 1 + (int)Math.Ceiling((double)(16f * progress));
+			MeshData meshData = new MeshData(num * 2, num * 6, false, false, true, false);
+			for (int i = 0; i < num; i++)
+			{
+				double num2 = (double)Math.Min(progress, (float)i * 0.0625f) * 3.141592653589793 * 2.0;
+				float num3 = (float)Math.Sin(num2);
+				float num4 = -(float)Math.Cos(num2);
+				meshData.AddVertexSkipTex(num3, num4, 0f, -1);
+				meshData.AddVertexSkipTex(num3 * 0.75f, num4 * 0.75f, 0f, -1);
+				if (i > 0)
+				{
+					meshData.AddIndices(new int[]
+					{
+						i * 2 - 2,
+						i * 2 - 1,
+						i * 2
+					});
+					meshData.AddIndices(new int[]
+					{
+						i * 2,
+						i * 2 - 1,
+						i * 2 + 1
+					});
+				}
+			}
+			if (this._circleMesh != null)
+			{
+				(ImmersiveJavelinsMod.capi as ICoreClientAPI).Render.UpdateMesh(this._circleMesh, meshData);
+				return;
+			}
+			this._circleMesh = (ImmersiveJavelinsMod.capi as ICoreClientAPI).Render.UploadMesh(meshData);
+		}
+
 		public override void Start(ICoreAPI api)
 		{
-			ImmersiveJavelinsMod.api = api;
+			capi = api;
+
 			var harmony = new Harmony("immersivejavelins");
 
 			var original = typeof(ItemSpear).GetMethod("OnHeldInteractStop");
@@ -40,7 +382,7 @@ namespace ImmersiveJavelins
 			var prefix3 = typeof(EntityPlayer_LightHsv_Patched).GetMethod("GetHeldItemInfo_Prefix");
 
 			harmony.Patch(original3, prefix: new HarmonyMethod(prefix3));
-
+			
 		}
 		
 		// public override void StartClientSide(ICoreClientAPI api)
@@ -98,7 +440,7 @@ namespace ImmersiveJavelins
 			if (secondsUsed < 0.35f) return false;
 
 			float damage = slot.Itemstack.Collectible.Attributes?["damage"].AsFloat(1.5f) ?? 1.5f;
-			(ImmersiveJavelinsMod.api as ICoreClientAPI)?.World.AddCameraShake(0.17f);
+			(ImmersiveJavelinsMod.capi as ICoreClientAPI)?.World.AddCameraShake(0.17f);
 
 			// Take out one item from the stack only once here
 
@@ -140,7 +482,7 @@ namespace ImmersiveJavelins
 			if (byEntity is EntityPlayer) co.RefillSlotIfEmpty(slot, byEntity, (itemstack) => itemstack.Collectible is ItemSpear);
 
             var pitch = (byEntity as EntityPlayer).talkUtil.pitchModifier;
-            byPlayer.Entity.World.PlaySoundAt(new AssetLocation("sounds/player/strike"), byPlayer.Entity, byPlayer, pitch * 0.9f + (float)ImmersiveJavelinsMod.api.World.Rand.NextDouble() * 0.2f, 16, 0.35f);
+            byPlayer.Entity.World.PlaySoundAt(new AssetLocation("sounds/player/strike"), byPlayer.Entity, byPlayer, pitch * 0.9f + (float)ImmersiveJavelinsMod.capi.World.Rand.NextDouble() * 0.2f, 16, 0.35f);
 
 			return false;
 		}

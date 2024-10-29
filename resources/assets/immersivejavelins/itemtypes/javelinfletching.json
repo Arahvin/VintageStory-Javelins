@@ -1,0 +1,40 @@
+{
+	code: "javelinfletching",
+	heldTpUseAnimation: "interactstatic", maxstacksize: 10,
+	shapeByType: {
+		"javelinfletching": { base: "javelin" }
+	},
+	texturesByType: {
+		"javelinfletching": {
+			"material": { base: "game:block/transparent" },
+			"string": { base: "game:block/transparent" },
+			"feather2": { base: "game:item/tool/material/feather2" },
+			"handle": { base: "game:block/transparent" }
+		}
+	},
+	creativeinventory: { "general": ["*"], "items": ["*"] },
+	guiTransform: {
+		translation: { x: 125, y: 77, z: 0 },
+		rotation: { x: -113, y: -39, z: 13 },
+		origin: { x: 1.37, y: 0.07, z: 0.51 },
+		scale: 3.82
+	},
+	fpHandTransform: {
+		translation: { x: -0.5, y: 0, z: 0 },
+		rotation: { x: -23, y: 30, z: 79 },
+		origin: { x: 1.28, y: 0, z: 0.52 },
+		scale: 2.5
+	},
+	tpHandTransform: {
+		translation: { x: -3, y: -0.8, z: -0.5 },
+		rotation: { x: -51, y: -22, z: -22 },
+		origin: { x: 1.25, y: 0, z: 0.5 },
+		scale: 0.82
+	},
+	groundTransform: {
+		translation: { x: 0, y: 0.37, z: 0 },
+		rotation: { x: 135, y: -10, z: 0 },
+		origin: { x: 0, y: 0, z: 0 },
+		scale: 3.56
+	}
+}
