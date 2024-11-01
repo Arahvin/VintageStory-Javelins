@@ -1,9 +1,9 @@
 {
-	"code": "javelin",
+	"code": "crudejavelin",
 	"class": "ItemSpear",
 	"tool": "spear",
 	"attributes": {
-		"handbook": { "groupBy": ["javelin-*"] },
+		"handbook": { "groupBy": ["crudejavelin-*"] },
 		"groundStorageTransformByType": {
 			"*": {
 				"translation": { "x": 0, "y": 0.22, "z": 0.68 },
@@ -11,13 +11,13 @@
 				"scale": 0.85
 			}
 		},
-		"spearEntityCode": "immersivejavelins:javelin-{material}",
+		"spearEntityCode": "immersivejavelins:crudejavelin-{material}",
 		"__comment": "Thrown damage",
 		"damageByType": {
-			"javelin-bone": 4
+			"crudejavelin-bone": 3.5
 		},
 		"breakChanceOnImpactByType": {
-			"javelin-bone": 0.2
+			"crudejavelin-bone": 0.4
 		}
 	},
 	"behaviors": [
@@ -41,8 +41,10 @@
 		"*": { "base": "shapes/javelin" }
 	},
 	"texturesByType": {
-		"javelin-bone": { 
-			"material": { "base": "game:block/creature/bone" } 
+		"crudejavelin-bone": { 
+			"material": { "base": "game:block/creature/bone" },
+			"feather2": { "base": "game:block/transparent" },
+			"string": { "base": "game:block/transparent" }
 		}
 	},
 	"heldTpHitAnimation": "idle",
@@ -77,10 +79,5 @@
 		"rotation": { "x": 0, "y": 0, "z": 0 },
 		"origin": { "x": 0.5, "y": 0, "z": 0.5 },
 		"scale": 3.4
-	},
-	tpOffHandTransform: {
-		translation: { x: -0.51, y: -0.54, z: -0.55 },
-		rotation: { x: 90, y: 1, z: 0 },
-		scale: 1
 	}
 }

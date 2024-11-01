@@ -20,6 +20,10 @@
 			<HintPath>C:\Users\diogo\AppData\Roaming\Vintagestory\Mods\VSSurvivalMod.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
+		<Reference Include="ProtoBuf">
+			<HintPath>C:\Users\diogo\AppData\Roaming\Vintagestory\Lib\protobuf-net.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
 	</ItemGroup>
 	
 	<ItemGroup Condition="'$(Configuration)' == 'Release'">
@@ -31,6 +35,6 @@
 	</ItemGroup>
 	
 	<Target Name="Package" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Release'">
-		<ZipDirectory DestinationFile="bin/$(TargetName).zip" SourceDirectory="$(TargetDir)" Overwrite="true" />
+		<ZipDirectory DestinationFile="bin/$(TargetName)_1.1.0.zip" SourceDirectory="$(TargetDir)" Overwrite="true" />
 	</Target>
 </Project>
