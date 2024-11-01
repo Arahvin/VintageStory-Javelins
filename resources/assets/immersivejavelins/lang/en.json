@@ -1,6 +1,10 @@
 {
 	"item-javelinhead-bone": "Bone Javelin Head",
 	"itemdesc-javelinhead-bone": "Perfectly pointed for precision—who knew bones could be so sharp?",
+	"item-crudejavelin-bone": "Crude Bone Javelin",
+	"itemdesc-crudejavelin-bone": "The crude bone javelin: lightweight, deadly(ish), and... it'll break probably, put some fletching on it!",
 	"item-javelin-bone": "Bone Javelin",
-	"itemdesc-javelin-bone": "The bone javelin: lightweight, deadly, and a great conversation starter!"
+	"itemdesc-javelin-bone": "The bone javelin: lightweight, deadly, and a great conversation starter!",
+	"item-javelinfletching": "Javelin Fletching",
+	"itemdesc-javelinfletching": "Feathers for flight, style for the fight—hits the mark every time!"
 }
