@@ -11,15 +11,48 @@
       "output": { "type": "item", "code": "javelinhead-bone" }
     },
     {
+      "ingredientPattern": "FK",
+      "recipeGroup": 1,
+      "ingredients": {
+        "F": { "type": "item", "code": "game:feather", "quantity": 1 },
+        "K": { "type": "item", "code": "game:knife-*", "isTool": true }
+      },
+      "width": 1,
+      "height": 2,
+      "output": { "type": "item", "code": "javelinfletching" }
+    },
+    {
+      "ingredientPattern": "BS",
+      "recipeGroup": 1,
+      "ingredients": {
+        "B": { "type": "item", "code": "javelinhead-bone", "quantity": 1 },
+        "S": { "type": "item", "code": "game:stick", "quantity": 1 }
+      },
+      "width": 1,
+      "height": 2,
+      "output": { "type": "item", "code": "crudejavelin-bone" }
+    },
+    {
       "ingredientPattern": "BSF",
       "recipeGroup": 1,
       "ingredients": {
         "B": { "type": "item", "code": "javelinhead-bone", "quantity": 1 },
         "S": { "type": "item", "code": "game:stick", "quantity": 1 },
-        "F": { "type": "item", "code": "game:feather", "quantity": 1 }
+        "F": { "type": "item", "code": "javelinfletching", "quantity": 1 }
       },
       "width": 1,
       "height": 3,
+      "output": { "type": "item", "code": "javelin-bone" }
+    },
+    {
+      "ingredientPattern": "CF",
+      "recipeGroup": 1,
+      "ingredients": {
+        "C": { "type": "item", "code": "crudejavelin-bone", "quantity": 1 },
+        "F": { "type": "item", "code": "javelinfletching", "quantity": 1 }
+      },
+      "width": 1,
+      "height": 2,
       "output": { "type": "item", "code": "javelin-bone" }
     }
 ]

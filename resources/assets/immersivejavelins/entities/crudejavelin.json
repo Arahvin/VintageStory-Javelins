@@ -1,5 +1,5 @@
 {
-	"code": "javelin",
+	"code": "crudejavelin",
 	"class": "EntityProjectile",
 	"hitboxSize": { "x": 0.125, "y": 0.125 },
 	"variantgroups": [
@@ -8,11 +8,13 @@
 	"client": {
 		"renderer": "Shape",
 		"shapeByType": {
-			"*": { "base": "javelin", "offsetX": -0.8125 }
+			"*": { "base": "javelin", "offsetX": -0.6125 }
 		},
 		"texturesByType": {
-			"javelin-bone": {
-				"material": { "base": "game:block/creature/bone" }
+			"crudejavelin-bone": {
+				"material": { "base": "game:block/creature/bone" },
+				"feather2": { "base": "game:block/transparent" },
+				"string": { "base": "game:block/transparent" }
 			}
 		},
 		"behaviors": [

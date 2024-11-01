@@ -13,6 +13,6 @@
 			"--addOrigin" , "${workspaceFolder}/resources/assets",
 		],
 		"console": "internalConsole",
-		"internalConsoleOptions": "openOnSessionStart",
+		"internalConsoleOptions": "openOnSessionStart"
 	}]
 }

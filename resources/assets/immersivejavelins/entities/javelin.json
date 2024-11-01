@@ -8,7 +8,7 @@
 	"client": {
 		"renderer": "Shape",
 		"shapeByType": {
-			"*": { "base": "javelin", "offsetX": -0.8125 }
+			"*": { "base": "javelin", "offsetX": -0.6125 }
 		},
 		"texturesByType": {
 			"javelin-bone": {
