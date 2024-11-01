@@ -6,7 +6,7 @@
     "Arahvin"
   ],
   "description": "Javelin alternative to Spears and Bows that fit the intended difficulty for the game.",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "assets": {
     "entities": [
       "javelin.json",
