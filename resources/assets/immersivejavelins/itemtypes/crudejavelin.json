@@ -57,10 +57,10 @@
 	},
 	"creativeinventory": { "general": ["*"], "items": ["*"], "tools": ["*"], "alphaweaponpack": ["*"] },
 	"guiTransform": {
-		"translation": { "x": -20.3, "y": 28, "z": 0 },
-		"rotation": { "x": -50, "y": 131, "z": -10 },
-		"origin": { "x": 1.1, "y": 0.5, "z": 0.27 },
-		"scale": 3.36
+		"translation": { "x": 0, "y": 0, "z": 0 },
+		"rotation": { "x": -60, "y": 124, "z": 6 },
+		"origin": { "x": 0.97, "y": 0, "z": 0.5 },
+		"scale": 3.76
 	},
 	"fpHandTransform": {
 		"translation": { "x": 0, "y": 0, "z": 0 },

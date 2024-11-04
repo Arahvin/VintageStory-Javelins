@@ -130,7 +130,6 @@ namespace ImmersiveJavelins
 											float heldDuration = (float)sapi.World.ElapsedMilliseconds - this.craftingStartTimes[playerUID];
 											if (heldDuration >= (float)this.boneJavelinCraftTime)
 											{
-												this.UpdateCirceMesh(0.5f);
 												this.CraftJavelinHeads(serverPlayer, leftHandItemSlot, serverPlayer);
 												itemSlot?.Itemstack?.Collectible.DamageItem(sapi.World, serverPlayer.Entity, itemSlot, 1);
 												this.craftingStartTimes.Remove(playerUID);
@@ -498,43 +497,8 @@ namespace ImmersiveJavelins
 			}
 			else
 			{
-				sapi.World.Logger.Event("Player lacks required items to craft javelin.");
+				// sapi.World.Logger.Event("Player lacks required items to craft javelin.");
 			}
-		}
-
-		private void UpdateCirceMesh(float progress)
-		{
-			int num = 1 + (int)Math.Ceiling((double)(16f * progress));
-			MeshData meshData = new MeshData(num * 2, num * 6, false, false, true, false);
-			for (int i = 0; i < num; i++)
-			{
-				double num2 = (double)Math.Min(progress, (float)i * 0.0625f) * 3.141592653589793 * 2.0;
-				float num3 = (float)Math.Sin(num2);
-				float num4 = -(float)Math.Cos(num2);
-				meshData.AddVertexSkipTex(num3, num4, 0f, -1);
-				meshData.AddVertexSkipTex(num3 * 0.75f, num4 * 0.75f, 0f, -1);
-				if (i > 0)
-				{
-					meshData.AddIndices(new int[]
-					{
-						i * 2 - 2,
-						i * 2 - 1,
-						i * 2
-					});
-					meshData.AddIndices(new int[]
-					{
-						i * 2,
-						i * 2 - 1,
-						i * 2 + 1
-					});
-				}
-			}
-			if (this._circleMesh != null)
-			{
-				capi.Render.UpdateMesh(this._circleMesh, meshData);
-				return;
-			}
-			this._circleMesh = capi.Render.UploadMesh(meshData);
 		}
 
 		public override void Start(ICoreAPI api)
@@ -632,7 +596,7 @@ namespace ImmersiveJavelins
 			Vec3d pos = byEntity.ServerPos.XYZ.Add(0, byEntity.LocalEyePos.Y - 0.2, 0);
 			Vec3d aheadPos = pos.AheadCopy(1, byEntity.ServerPos.Pitch + rndpitch, byEntity.ServerPos.Yaw + rndyaw);
 			Vec3d velocity = (aheadPos - pos) * 0.8;
-			Vec3d spawnPos = byEntity.ServerPos.BehindCopy(0.21).XYZ.Add(byEntity.LocalEyePos.X, byEntity.LocalEyePos.Y - 0.2, byEntity.LocalEyePos.Z);
+			Vec3d spawnPos = byEntity.ServerPos.AheadCopy(0.21).XYZ.Add(byEntity.LocalEyePos.X, byEntity.LocalEyePos.Y - 0.2, byEntity.LocalEyePos.Z);
 			enpr.ServerPos.SetPosWithDimension(spawnPos);
 			enpr.ServerPos.Motion.Set(velocity);
 
